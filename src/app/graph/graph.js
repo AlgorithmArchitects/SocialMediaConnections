@@ -4,28 +4,21 @@ import Person from './person';
 class Graph extends Component {
   constructor(props, context){
     super(props, context);
-    this.state = {people: [
-        {
-         id: 1,
-         name: "Cat 1",
-         image: "https://placekitten.com/400/400"
-        },
-        {
-         id: 2,
-         name: "Cat 2",
-         image: "https://placekitten.com/500/500"
-        },
-        {
-         id: 3,
-         name: "Cat 3",
-         image: "https://placekitten.com/600/600"
-        }
-    ]};
+    this.state = {people: []};
+    for(var res = 50; res < 100; res++){
+        this.state.people.push({id: res, name: "Cat " + res, image: "https://placekitten.com/"+res+"/"+res});
+    }
   }
   render() {
+    var count = 0;
     var cx = -40;
-    var cy = 50;
+    var cy = 0;
     var people = this.state.people.map(function(person){
+        if(count%10 === 0){
+            cx = -40;
+            cy += 60;
+        }
+        count++;
         cx += 90;
         return (
             <Person key={person.id} cx={cx} cy={cy} data={ person }/>
@@ -34,7 +27,7 @@ class Graph extends Component {
     });
     return (
       <div className="graph">
-        <svg width="100%" height="100%">
+        <svg width="100%" height="600px">
             {people}
         </svg>
       </div>
