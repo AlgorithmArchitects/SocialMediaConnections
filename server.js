@@ -15,7 +15,7 @@ var twitterClient = new Twitter({
 
 var valuesToReturn = ['id', 'name', 'screen_name', 'profile_image_url'];
 
-var lookupTwitterFriends = function(i, ids, users, res){
+var lookupTwitterFriends = function(i, ids, users, screen_name, res){
 
     console.log(i);
     var second = (i+100 < ids.length) ? i+100 : ids.length;
@@ -44,11 +44,12 @@ var lookupTwitterFriends = function(i, ids, users, res){
         if(i == ids.length){
             console.log("Response:");
             console.log(users);
+            cache.twitter[screen_name] = users;
             res.send(users);
             return;
         }
         else{
-            return lookupTwitterFriends(i, ids, users, res);
+            return lookupTwitterFriends(i, ids, users, screen_name, res);
         }
 
     });
@@ -72,7 +73,7 @@ var getTwitterFriends = function(cursor, ids, res, screen_name){
             return getTwitterFriends(friends.next_cursor, ids, res, screen_name);
         }
         else{
-            return lookupTwitterFriends(0, ids, [], res);
+            return lookupTwitterFriends(0, ids, [], screen_name, res);
         }
     });
 }
@@ -86,6 +87,12 @@ app.get('/twitter', function (req, res) {
         console.log('Response: {error: "screen_name is required"}');
         res.send({error: "screen_name is required"});
         return;
+    }
+    else if(screen_name in cache.twitter){
+      console.log("Response:");
+      console.log(cache.twitter[screen_name]);
+      res.send(cache.twitter[screen_name]);
+      return;
     }
     else{
         getTwitterFriends(-1, [], res, screen_name);
