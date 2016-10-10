@@ -15,39 +15,65 @@ var twitterClient = new Twitter({
 
 var valuesToReturn = ['id', 'name', 'screen_name', 'profile_image_url'];
 
-var getFriends = function(cursor, users, res, screen_name){
-    if(screen_name in cache.twitter){
-      console.log("Response:");
-      console.log(cache.twitter[screen_name]);
-      res.send(cache.twitter[screen_name]);
-      return;
-    }
-    var params = {screen_name: screen_name, skip_status: true, cursor: cursor};
-    twitterClient.get('friends/list', params, function(error, friends, response) {
-        console.log(error);
-        console.log(friends);
+var lookupTwitterFriends = function(i, ids, users, screen_name, res){
+
+    console.log(i);
+    var second = (i+100 < ids.length) ? i+100 : ids.length;
+    var these_ids = ids.slice(i, second).join(", ");
+    i = second;
+    console.log(i);
+    console.log(these_ids);
+    console.log(ids.length);
+    twitterClient.post('users/lookup', {user_id: these_ids}, function(error, friends, response) {
         if (error){
+            console.log("lookup error");
+            console.log(error);
             res.status(500);
             res.send(error);
             return;
         }
-        for(u in friends.users){
+        for(u in friends){
             var obj = {};
-            for(var i in valuesToReturn){
-                var key = valuesToReturn[i];
-                obj[key] = friends.users[u][key];
+            for(var value in valuesToReturn){
+                var key = valuesToReturn[value];
+                obj[key] = friends[u][key];
             }
             users.push(obj);
         }
-        if(friends.next_cursor != 0){
-            return getFriends(friends.next_cursor, users, res, screen_name);
-        }
-        else{
+
+        if(i == ids.length){
             console.log("Response:");
             console.log(users);
             cache.twitter[screen_name] = users;
             res.send(users);
             return;
+        }
+        else{
+            return lookupTwitterFriends(i, ids, users, screen_name, res);
+        }
+
+    });
+};
+
+
+var getTwitterFriends = function(cursor, ids, res, screen_name){
+    var params = {screen_name: screen_name, skip_status: true, cursor: cursor};
+    twitterClient.get('friends/ids', params, function(error, friends, response) {
+        if (error){
+            console.log("ids error");
+            console.log(error);
+            res.status(500);
+            res.send(error);
+            return;
+        }
+        for(u in friends.ids){
+            ids.push(friends.ids[u]);
+        }
+        if(friends.next_cursor != 0){
+            return getTwitterFriends(friends.next_cursor, ids, res, screen_name);
+        }
+        else{
+            return lookupTwitterFriends(0, ids, [], screen_name, res);
         }
     });
 }
@@ -62,8 +88,14 @@ app.get('/twitter', function (req, res) {
         res.send({error: "screen_name is required"});
         return;
     }
+    else if(screen_name in cache.twitter){
+      console.log("Response:");
+      console.log(cache.twitter[screen_name]);
+      res.send(cache.twitter[screen_name]);
+      return;
+    }
     else{
-        getFriends(-1, [], res, screen_name);
+        getTwitterFriends(-1, [], res, screen_name);
         return;
     }
 });
