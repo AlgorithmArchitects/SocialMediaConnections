@@ -9,15 +9,7 @@
   stroke-width: 1.5px;
 }
 
-#licensing {
-  fill: green;
-}
-
-.link.licensing {
-  stroke: green;
-}
-
-.link.resolved {
+.link.locationLink {
   stroke-dasharray: 0,2 1;
 }
 
@@ -54,7 +46,7 @@ var nodes = {};
 
 // Compute the distinct links from the nodes.
 PersonNodes.forEach(function(node) {
-  var link = {source: node.Site, target: node.Name + ',' + node.Location, type: "resolved"};
+  var link = {source: node.Site, target: node.Name + ',' + node.Location, type: "networkLink"};
   links.push(link);
   link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
   link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
@@ -68,7 +60,7 @@ PersonNodes.forEach(function(node) {
   {
     locations[node.Location].forEach(function(person)
     {
-      var locLink = {source: person, target: node.Name + ',' + node.Location, type: "suit"};
+      var locLink = {source: person, target: node.Name + ',' + node.Location, type: "locationLink"};
 	  links.push(locLink);
 	  locLink.source = nodes[locLink.source] || (nodes[locLink.source] = {name: locLink.source});
       locLink.target = nodes[locLink.target] || (nodes[locLink.target] = {name: locLink.target});
@@ -95,7 +87,7 @@ var svg = d3.select("body").append("svg")
 
 // Per-type markers, as they don't inherit styles.
 svg.append("defs").selectAll("marker")
-    .data(["suit", "licensing", "resolved"])
+    .data(["networkLink", "locationLink"])
   .enter().append("marker")
     .attr("id", function(d) { return d; })
     .attr("viewBox", "0 -5 10 10")
