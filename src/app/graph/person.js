@@ -7,8 +7,9 @@ class Person extends Component {
     var patternIdUrl = "url(#" + this.props.data.id + ")";
     return (
         <div>
+            {this.props.alignImage == "right" ? this.props.data.name : null}
             <img src={ this.props.data.profile_image_url } className='circle' />
-            {this.props.data.name}
+            {this.props.alignImage == "left" ? this.props.data.name : null}
         </div>
     );
   }

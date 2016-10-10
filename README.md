@@ -6,7 +6,7 @@ To install:
 npm install
 ```
 
-To configure, edit `server.js` with twitter app information. Be sure to never commit the values
+To configure, edit `config.js` with twitter app information. Be sure to never commit the values
 of these variables.
 
 To start:

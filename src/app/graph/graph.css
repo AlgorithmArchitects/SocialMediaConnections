@@ -1,3 +1,9 @@
 .graph {
     font-size: large;
 }
+.twitter{
+    float: left;
+}
+.facebook{
+    float: right;
+}

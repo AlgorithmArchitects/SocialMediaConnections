@@ -1,15 +1,16 @@
 var Twitter = require('twitter');
 var express = require('express');
+var config = require('./config');
 var app = express();
 
 // a cache object indexed by twitter and then by screen name
 var cache = {twitter: {}};
 
 var twitterClient = new Twitter({
-    consumer_key: '',
-    consumer_secret: '',
-    access_token_key: '',
-    access_token_secret: ''
+    consumer_key: config.twitter_consumer_key,
+    consumer_secret: config.twitter_consumer_secret,
+    access_token_key: config.twitter_access_token_key,
+    access_token_secret: config.twitter_access_token_secret
 });
 
 var valuesToReturn = ['id', 'name', 'screen_name', 'profile_image_url'];
@@ -26,6 +27,7 @@ var getFriends = function(cursor, users, res, screen_name){
         console.log(error);
         console.log(friends);
         if (error){
+            res.status(500);
             res.send(error);
             return;
         }
