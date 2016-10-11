@@ -13,7 +13,7 @@ var twitterClient = new Twitter({
     access_token_secret: config.twitter_access_token_secret
 });
 
-var valuesToReturn = ['id', 'name', 'screen_name', 'profile_image_url'];
+var valuesToReturn = ['id', 'name', 'screen_name', 'profile_image_url', 'location'];
 
 var lookupTwitterFriends = function(i, ids, users, screen_name, res){
 

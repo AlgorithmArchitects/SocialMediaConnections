@@ -1,9 +1,21 @@
-.graph {
-    font-size: large;
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
 }
-.twitter{
-    float: left;
+
+.link.locationLink {
+  stroke-dasharray: 0,2 1;
 }
-.facebook{
-    float: right;
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
