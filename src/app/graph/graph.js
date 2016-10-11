@@ -68,22 +68,24 @@ class Graph extends Component {
       link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
       link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
 
-
-      if(locations[node.Location] == null)
-      {
-        locations[node.Location] = [];
-      }
-      else
-      {
-        locations[node.Location].forEach(function(person)
+	  if(node.Location != null && node.Location != "")
+	  {
+        if(locations[node.Location] == null)
         {
-          var locLink = {source: person, target: node.Name + ',' + node.Location, type: "locationLink"};
-    	  links.push(locLink);
-    	  locLink.source = nodes[locLink.source] || (nodes[locLink.source] = {name: locLink.source});
-          locLink.target = nodes[locLink.target] || (nodes[locLink.target] = {name: locLink.target});
-        });
-      }
-      locations[node.Location].push(node.Name + ',' + node.Location);
+          locations[node.Location] = [];
+        }
+        else
+        {
+          locations[node.Location].forEach(function(person)
+          {
+            var locLink = {source: person, target: node.Name + ',' + node.Location, type: "locationLink"};
+            links.push(locLink);
+    	    locLink.source = nodes[locLink.source] || (nodes[locLink.source] = {name: locLink.source});
+            locLink.target = nodes[locLink.target] || (nodes[locLink.target] = {name: locLink.target});
+          });
+        }
+        locations[node.Location].push(link.target);
+	  }
     });
 
     var width = window.innerWidth,
