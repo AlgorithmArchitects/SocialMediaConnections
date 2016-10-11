@@ -45,7 +45,6 @@ class Graph extends Component {
 
     var links = [
     ];
-
     //sample personeNodes
     //var PersonNodes = [
     //	{Name: "Andrew Dorn", Site: "Facebook", Location: "West Des Moines, Iowa"},
@@ -54,13 +53,13 @@ class Graph extends Component {
     //	{Name: "David Schott", Site: "Facebook", Location: "Ames, Iowa"},
     //	{Name: "Somebody Else", Site: "Twitter", Location: "West Des Moines, Iowa"}
     //];
-
+	
     var PersonNodes = this.state.personNodes;
-
+	
     var locations = [];
-
+	
     var nodes = {};
-
+	
     // Compute the distinct links from the nodes.
     PersonNodes.forEach(function(node) {
       var link = {source: node.Site, target: node.Name + ',' + node.Location, type: "networkLink"};
@@ -84,7 +83,7 @@ class Graph extends Component {
             locLink.target = nodes[locLink.target] || (nodes[locLink.target] = {name: locLink.target});
           });
         }
-        locations[node.Location].push(link.target);
+        locations[node.Location].push(link.target.name);
 	  }
     });
 
