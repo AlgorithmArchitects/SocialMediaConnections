@@ -1,6 +1,7 @@
 var Twitter = require('twitter');
 var express = require('express');
 var config = require('./config');
+var fbgraph = require('fbgraph');
 var app = express();
 
 // a cache object indexed by twitter and then by screen name
@@ -98,6 +99,15 @@ app.get('/twitter', function (req, res) {
         getTwitterFriends(-1, [], res, screen_name);
         return;
     }
+});
+
+app.get('/facebook', function(req, res){
+      var accessToken = req.query.accessToken;
+      var id = req.query.id;
+      fbgraph.setAccessToken(accessToken);
+      fbgraph.get(id  + "/friends", null, function(err, response) {
+        console.log(response);
+      });
 });
 
 app.listen(3001, function () {
