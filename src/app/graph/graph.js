@@ -160,7 +160,7 @@ class Graph extends Component {
         </form>
         <FacebookLogin
             appId="198380237257114"
-            scope="public_profile"
+            scope="public_profile,user_friends"
             autoLoad={true}
             fields="name,email,picture,friends"
             callback={this.facebookLogin}
