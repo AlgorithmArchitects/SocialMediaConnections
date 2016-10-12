@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './graph.css';
+import FacebookLogin from 'react-facebook-login';
+
 
 class Graph extends Component {
   constructor(props, context){
@@ -66,21 +68,10 @@ class Graph extends Component {
 
     var links = [
     ];
-    //sample personeNodes
-    //var PersonNodes = [
-    //	{Name: "Andrew Dorn", Site: "Facebook", Location: "West Des Moines, Iowa"},
-    //	{Name: "Andrew Dorn", Site: "Google Plus", Location: "West Des Moines, Iowa"},
-    //	{Name: "Andrew Dorn", Site: "Twitter", Location: "West Des Moines, Iowa"},
-    //	{Name: "David Schott", Site: "Facebook", Location: "Ames, Iowa"},
-    //	{Name: "Somebody Else", Site: "Twitter", Location: "West Des Moines, Iowa"}
-    //];
-	
+
     var PersonNodes = this.state.personNodes;
-	
     var locations = [];
-	
     var nodes = {};
-	
     // Compute the distinct links from the nodes.
     PersonNodes.forEach(function(node) {
       var link = {source: node.Site, target: node.Name + ',' + node.Location, type: "networkLink"};
@@ -88,7 +79,7 @@ class Graph extends Component {
       link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
       link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
 
-	  if(node.Location != null && node.Location != "")
+	  if(node.Location != null && node.Location !== "")
 	  {
         if(locations[node.Location] == null)
         {
@@ -174,6 +165,13 @@ class Graph extends Component {
       return "translate(" + d.x + "," + d.y + ")";
     }
   }
+  facebookLogin(response){
+    console.log(response);
+    fetch('/facebook?accessToken=' + response.accessToken + "&id=" + response.id)
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(err => console.error(err));
+  }
   render() {
     return (
       <div>
@@ -186,6 +184,16 @@ class Graph extends Component {
 			<textarea name="SCSV" ref="SCSV" rows="5" cols="70" wrap="off" onChange={this.changeSCSV} placeholder="Enter semicolon separated values here"/>
 			<input type="submit" value="Submit" />
 		</form>
+		<hr />
+        <FacebookLogin
+            appId="198380237257114"
+            scope="public_profile"
+            autoLoad={true}
+            fields="name,email,picture,friends"
+            callback={this.facebookLogin}
+            cssClass="my-facebook-button-class"
+            icon="fa-facebook"
+          />
         <div className="graph">
         </div>
       </div>
