@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import './graph.css';
 import FacebookLogin from 'react-facebook-login';
 
+//Some code from http://bl.ocks.org/mbostock/1153292 used in accordance with the GNU General Public License, version 3.
 
 class Graph extends Component {
   constructor(props, context){
@@ -85,7 +86,16 @@ class Graph extends Component {
     var nodes = {};
     // Compute the distinct links from the nodes.
     PersonNodes.forEach(function(node) {
-      var link = {source: node.Site, target: node.Name + ',' + node.Location, type: "networkLink"};
+	  var nodeName;
+	  if(node.Location == null || node.Location == "")
+	  {
+		nodeName = node.Name;
+	  }
+	  else
+	  {
+		nodeName = node.Name + ", " + node.Location;
+	  }
+      var link = {source: node.Site, target: nodeName, type: "networkLink"};
       links.push(link);
       link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
       link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
@@ -100,7 +110,7 @@ class Graph extends Component {
         {
           locations[node.Location].forEach(function(person)
           {
-            var locLink = {source: person, target: node.Name + ',' + node.Location, type: "locationLink"};
+            var locLink = {source: person, target: nodeName, type: "locationLink"};
             links.push(locLink);
     	    locLink.source = nodes[locLink.source] || (nodes[locLink.source] = {name: locLink.source});
             locLink.target = nodes[locLink.target] || (nodes[locLink.target] = {name: locLink.target});
@@ -203,7 +213,7 @@ class Graph extends Component {
         </form>
 		<hr />
 		<form onSubmit={this.submitSCSV}>
-			<textarea name="SCSV" ref="SCSV" rows="5" cols="70" wrap="off" onChange={this.changeSCSV} placeholder="Enter semicolon separated values here\nFormat is name;site;location"/>
+			<textarea name="SCSV" ref="SCSV" rows="5" cols="70" wrap="off" onChange={this.changeSCSV} placeholder="Enter semicolon separated values here. Format is name;site;location"/>
 			<input type="submit" value="Submit" />
 		</form>
 		<hr />
