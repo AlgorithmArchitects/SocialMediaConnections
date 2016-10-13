@@ -32,9 +32,11 @@ class Graph extends Component {
 	{
 	  var lineVals = lines[i].split(';');
 	  for(var j = 0;j < personNodes.length;j++)
-      if(personNodes[j].Name == lineVals[0] && personNodes[j].Site == lineVals[1] && personNodes[j].Location == lineVals[2]){
+	  {
+        if(personNodes[j].Name == lineVals[0] && personNodes[j].Site == lineVals[1] && personNodes[j].Location == lineVals[2]){
         //Duplicate Entry
-      }
+        }
+	  }
     }
   }
   twitterDataToNodes(data){
