@@ -101,15 +101,6 @@ app.get('/twitter', function (req, res) {
     }
 });
 
-app.get('/facebook', function(req, res){
-      var accessToken = req.query.accessToken;
-      var id = req.query.id;
-      fbgraph.setAccessToken(accessToken);
-      fbgraph.get(id  + "/friends", null, function(err, response) {
-        console.log(response);
-      });
-});
-
 app.listen(3001, function () {
       console.log('Example app listening on port 3001!');
 });
