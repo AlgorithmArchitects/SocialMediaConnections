@@ -12,6 +12,7 @@ class Graph extends Component {
 	this.changeSCSV = this.changeSCSV.bind(this);
     this.submitTwitter = this.submitTwitter.bind(this);
 	this.submitSCSV = this.submitSCSV.bind(this);
+    this.facebookLogin = this.facebookLogin.bind(this);
   }
   changeTwitterScreenName(e){
     this.setState({twitter_screen_name: e.target.value});
@@ -166,11 +167,22 @@ class Graph extends Component {
     }
   }
   facebookLogin(response){
-    console.log(response);
-    fetch('/facebook?accessToken=' + response.accessToken + "&id=" + response.id)
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(err => console.error(err));
+    console.log(this.state);
+    var friends = response.friends.data;
+    var personNodes = this.state.personNodes.filter(function(item, idx){
+        if(item.Site !== 'Facebook'){
+            return item;
+        }
+        return null;
+    });
+    for(var i = 0; i < friends.length; i++){
+        personNodes.push({Name: friends[i].name, Site: 'Facebook', Location: ""});
+    }
+    console.log(personNodes);
+    this.setState({personNodes: personNodes});
+    this.removeGraph();
+    this.createGraph();
+
   }
   render() {
     return (
