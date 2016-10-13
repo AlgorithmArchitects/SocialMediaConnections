@@ -127,7 +127,7 @@ class Graph extends Component {
         .nodes(d3.values(nodes))
         .links(links)
         .size([width, height])
-        .linkDistance(60)
+        .linkDistance(200)
         .charge(-300)
         .on("tick", tick)
         .start();
