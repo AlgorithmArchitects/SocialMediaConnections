@@ -58,7 +58,7 @@ var lookupTwitterFriends = function(i, ids, users, screen_name, res){
 
 
 var getTwitterFriends = function(cursor, ids, res, screen_name){
-    var params = {screen_name: screen_name, skip_status: true, cursor: cursor};
+    var params = {screen_name: screen_name, skip_status: true, cursor: cursor, stringify_ids: true};
     twitterClient.get('friends/ids', params, function(error, friends, response) {
         if (error){
             console.log("ids error");
