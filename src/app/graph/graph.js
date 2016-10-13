@@ -29,18 +29,28 @@ class Graph extends Component {
   }
   submitSCSV(e){
 	e.preventDefault();
+	var personNodes = this.state.personNodes;
 	var lines = this.state.SCSV.split('\n');
+	console.log(lines);
 	
 	for(var i = 0;i < lines.length;i++)
 	{
 	  var lineVals = lines[i].split(';');
-	  for(var j = 0;j < personNodes.length;j++)
+	  var foundDuplicate = 0;
+	  for(var j = 0;j < personNodes.length && foundDuplicate == 0;j++)
 	  {
         if(personNodes[j].Name == lineVals[0] && personNodes[j].Site == lineVals[1] && personNodes[j].Location == lineVals[2]){
-        //Duplicate Entry
+          foundDuplicate = 1;
         }
 	  }
+	  if(foundDuplicate == 0)
+	  {
+		  personNodes.push({Name: lineVals[0], Site: lineVals[1], Location: lineVals[2]});
+	  }
     }
+	this.setState({personNodes: personNodes});
+    this.removeGraph();
+    this.createGraph();
   }
   twitterDataToNodes(data){
       console.log(data);
@@ -193,7 +203,7 @@ class Graph extends Component {
         </form>
 		<hr />
 		<form onSubmit={this.submitSCSV}>
-			<textarea name="SCSV" ref="SCSV" rows="5" cols="70" wrap="off" onChange={this.changeSCSV} placeholder="Enter semicolon separated values here"/>
+			<textarea name="SCSV" ref="SCSV" rows="5" cols="70" wrap="off" onChange={this.changeSCSV} placeholder="Enter semicolon separated values here\nFormat is name;site;location"/>
 			<input type="submit" value="Submit" />
 		</form>
 		<hr />
