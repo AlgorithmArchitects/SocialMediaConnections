@@ -5,12 +5,17 @@ import './graph.css';
 class Graph extends Component {
   constructor(props, context){
     super(props, context);
-    this.state = {personNodes: [], twitter_screen_name: null};
+    this.state = {personNodes: [], twitter_screen_name: null, SCSV: null};
     this.changeTwitterScreenName = this.changeTwitterScreenName.bind(this);
+	this.changeSCSV = this.changeSCSV.bind(this);
     this.submitTwitter = this.submitTwitter.bind(this);
+	this.submitSCSV = this.submitSCSV.bind(this);
   }
   changeTwitterScreenName(e){
     this.setState({twitter_screen_name: e.target.value});
+  }
+  changeSCSV(e){
+	  this.setState({SCSV: e.target.value});
   }
   submitTwitter(e){
     e.preventDefault();
@@ -18,6 +23,19 @@ class Graph extends Component {
         .then(response => response.json())
         .then(data => this.twitterDataToNodes(data))
         .catch(err => console.error(err));
+  }
+  submitSCSV(e){
+	e.preventDefault();
+	var lines = this.state.SCSV.split('\n');
+	
+	for(var i = 0;i < lines.length;i++)
+	{
+	  var lineVals = lines[i].split(';');
+	  for(var j = 0;j < personNodes.length;j++)
+      if(personNodes[j].Name == lineVals[0] && personNodes[j].Site == lineVals[1] && personNodes[j].Location == lineVals[2]){
+        //Duplicate Entry
+      }
+    }
   }
   twitterDataToNodes(data){
       console.log(data);
@@ -41,6 +59,7 @@ class Graph extends Component {
   removeGraph(){
     d3.select(".graph svg").remove();
   }
+  
   createGraph(){
 
     var links = [
@@ -160,6 +179,11 @@ class Graph extends Component {
             <input name="twitter_screen_name" ref="twitter_screen_name" onChange={this.changeTwitterScreenName} placeholder="Twitter screenname"/>
             <input type="submit" value="Submit" />
         </form>
+		<hr />
+		<form onSubmit={this.submitSCSV}>
+			<textarea name="SCSV" ref="SCSV" rows="5" cols="70" wrap="off" onChange={this.changeSCSV} placeholder="Enter semicolon separated values here"/>
+			<input type="submit" value="Submit" />
+		</form>
         <div className="graph">
         </div>
       </div>
